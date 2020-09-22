@@ -13,12 +13,11 @@ function App() {
   const [current, setNavigation] = useNavigation({
     onSuccess: (data) => setCardData(data),
     onUpKey: () => setCurrentIndex((i) => (i > -1 ? i - 1 : i)),
-    onDownKey: () => setCurrentIndex((i) => i + 1),
+    onDownKey: (len) => setCurrentIndex((i) => (len > i ? i + 1 : i)),
   });
 
   useEffect(async () => {
     const catagories = await fetchAllCategories();
-    // console.log("All categories ", catagories);
     setCategory(catagories);
     const firstCategoryData = await fetchCategoryData(catagories[0].link);
     setCardData(firstCategoryData);

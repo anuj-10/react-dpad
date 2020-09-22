@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 
 export default function SimpleCard({ categoryData, currentIndex }) {
   useEffect(() => {
-    console.log("Current index => ", currentIndex);
     if (currentIndex === -1) {
       document.getElementById(`card-0`) &&
         document.getElementById(`card-0`).blur();
@@ -21,7 +20,6 @@ export default function SimpleCard({ categoryData, currentIndex }) {
           id={`card-${i}`}
           key={i}
           tabIndex="0"
-          // onClick={() => focus(i)}
         >
           <div className="cards-img">
             <img

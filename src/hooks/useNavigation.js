@@ -52,17 +52,19 @@ export const useNavigation = ({ onSuccess, onUpKey, onDownKey }) => {
       case "ArrowDown":
         current.navigationType = "card";
         setCurrent(current);
-        onDownKey();
+        onDownKey(
+          current.catagoryData
+            ? current.catagoryData.length
+            : Number.MAX_SAFE_INTEGER
+        );
         break;
       case "ArrowUp":
-        current.navigationType = "card";
-        setCurrent(current);
         onUpKey();
         break;
       default:
         break;
     }
-    console.log("current => ", current, evt.key);
+
     if (
       current.navigationType === "nav" &&
       (evt.key === "ArrowLeft" || evt.key === "ArrowRight")
@@ -70,16 +72,12 @@ export const useNavigation = ({ onSuccess, onUpKey, onDownKey }) => {
       const data = allElements[setIndex].getAttribute("data-link");
       console.log("Route data => ", data);
       const catagoryData = await fetchCategoryData(data);
-      selectElement(
-        allElements[setIndex] || allElements[0],
-        setIndex,
-        catagoryData
-      );
+      selectElement(allElements[setIndex] || allElements[0], catagoryData);
       onSuccess(catagoryData);
     }
   };
 
-  const selectElement = (selectElement, setIndex = 0, catagoryData = []) => {
+  const selectElement = (selectElement, catagoryData) => {
     if (selectElement) {
       [].forEach.call(getAllElements(), (element, index) => {
         const selectThisElement = element;
@@ -95,12 +93,8 @@ export const useNavigation = ({ onSuccess, onUpKey, onDownKey }) => {
         }
       });
       selectElement.focus();
-      setCurrent({
-        type: selectElement.tagName,
-        index: setIndex,
-        catagoryData,
-        navigationType: "nav",
-      });
+      current.catagoryData = catagoryData;
+      setCurrent(current);
     } else {
       setNavigation(0);
     }
