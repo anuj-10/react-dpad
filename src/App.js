@@ -8,12 +8,12 @@ import { useNavigation } from "./hooks/useNavigation";
 function App() {
   const [category, setCategory] = useState([]);
   const [cardData, setCardData] = useState([]);
-  const [downFocus, setDownFocus] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(-1);
 
   const [current, setNavigation] = useNavigation({
     onSuccess: (data) => setCardData(data),
-    onUpKey: () => setDownFocus(false),
-    onDownKey: () => setDownFocus(true),
+    onUpKey: () => setCurrentIndex((i) => (i > -1 ? i - 1 : i)),
+    onDownKey: () => setCurrentIndex((i) => i + 1),
   });
 
   useEffect(async () => {
@@ -24,13 +24,20 @@ function App() {
     setCardData(firstCategoryData);
   }, []);
 
+  useEffect(() => {
+    if (currentIndex === -1) {
+      current.navigationType = "nav";
+      setNavigation(current);
+    }
+  }, [currentIndex]);
+
   return (
     <div className="App">
       <div className="search-bar">
         <input type="text" placeholder="Search TV" />
       </div>
       <Navigation category={category} />
-      <Cards categoryData={cardData} downFocus={downFocus} />
+      <Cards categoryData={cardData} currentIndex={currentIndex} />
     </div>
   );
 }

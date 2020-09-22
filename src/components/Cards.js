@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 
-export default function SimpleCard({ categoryData, downFocus }) {
+export default function SimpleCard({ categoryData, currentIndex }) {
   useEffect(() => {
-    if (downFocus === true) {
-      document.getElementById(`card-0`) &&
-        document.getElementById(`card-0`).focus();
-    } else {
+    console.log("Current index => ", currentIndex);
+    if (currentIndex === -1) {
       document.getElementById(`card-0`) &&
         document.getElementById(`card-0`).blur();
+    } else {
+      document.getElementById(`card-${currentIndex}`) &&
+        document.getElementById(`card-${currentIndex}`).focus();
     }
-  }, [downFocus]);
+  }, [currentIndex]);
 
   return (
     <div className="parent">
@@ -20,7 +21,7 @@ export default function SimpleCard({ categoryData, downFocus }) {
           id={`card-${i}`}
           key={i}
           tabIndex="0"
-          // onClick={() => document.getElementById(`card-${i}`).focus()}
+          // onClick={() => focus(i)}
         >
           <div className="cards-img">
             <img

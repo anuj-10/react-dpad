@@ -55,7 +55,7 @@ export const useNavigation = ({ onSuccess, onUpKey, onDownKey }) => {
         onDownKey();
         break;
       case "ArrowUp":
-        current.navigationType = "nav";
+        current.navigationType = "card";
         setCurrent(current);
         onUpKey();
         break;
