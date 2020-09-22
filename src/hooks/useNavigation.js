@@ -62,7 +62,7 @@ export const useNavigation = ({ onSuccess, onUpKey, onDownKey }) => {
       default:
         break;
     }
-    console.log("current", current, evt.key);
+    console.log("current => ", current, evt.key);
     if (
       current.navigationType === "nav" &&
       (evt.key === "ArrowLeft" || evt.key === "ArrowRight")
