@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import { fetchCategoryData } from "../api";
 
-export const useNavigation = ({ onSuccess, onUpKey, onDownKey }) => {
+export const useNavigation = ({
+  onUpKey,
+  onDownKey,
+  onLeftKey,
+  onRightKey,
+}) => {
   useEffect(() => {
     document.addEventListener("keydown", onKeyDown);
     setNavigation(0);
@@ -10,44 +14,30 @@ export const useNavigation = ({ onSuccess, onUpKey, onDownKey }) => {
   }, []);
 
   const [current, setCurrent] = useState({
-    type: null,
-    index: null,
-    catagoryData: [],
     navigationType: "nav",
   });
 
-  const getAllElements = () => document.querySelectorAll("[nav-selectable]");
+  const setNavigation = () => current;
 
-  const getTheIndexOfTheSelectedElement = () => {
-    const element = document.querySelector("[nav-selected=true]");
-    return element ? parseInt(element.getAttribute("nav-index")) : 0;
-  };
-
-  const setNavigation = (index) =>
-    selectElement(getAllElements()[index] || document.body);
-
-  const onKeyDown = async (evt) => {
+  const onKeyDown = async ({ key }) => {
     if (
-      evt.key !== "ArrowRight" &&
-      evt.key !== "ArrowLeft" &&
-      evt.key !== "ArrowDown" &&
-      evt.key !== "ArrowUp"
+      key !== "ArrowRight" &&
+      key !== "ArrowLeft" &&
+      key !== "ArrowDown" &&
+      key !== "ArrowUp"
     )
       return;
 
-    const allElements = getAllElements();
-    const currentIndex = getTheIndexOfTheSelectedElement();
-
-    let setIndex;
-
-    switch (evt.key) {
+    switch (key) {
       case "ArrowRight":
-        const goToFirstElement = currentIndex + 1 > allElements.length - 1;
-        setIndex = goToFirstElement ? 0 : currentIndex + 1;
+        if (current.navigationType === "nav") {
+          onRightKey();
+        }
         break;
       case "ArrowLeft":
-        const goToLastElement = currentIndex === 0;
-        setIndex = goToLastElement ? allElements.length - 1 : currentIndex - 1;
+        if (current.navigationType === "nav") {
+          onLeftKey();
+        }
         break;
       case "ArrowDown":
         current.navigationType = "card";
@@ -63,40 +53,6 @@ export const useNavigation = ({ onSuccess, onUpKey, onDownKey }) => {
         break;
       default:
         break;
-    }
-
-    if (
-      current.navigationType === "nav" &&
-      (evt.key === "ArrowLeft" || evt.key === "ArrowRight")
-    ) {
-      const data = allElements[setIndex].getAttribute("data-link");
-      console.log("Route data => ", data);
-      const catagoryData = await fetchCategoryData(data);
-      selectElement(allElements[setIndex] || allElements[0], catagoryData);
-      onSuccess(catagoryData);
-    }
-  };
-
-  const selectElement = (selectElement, catagoryData) => {
-    if (selectElement) {
-      [].forEach.call(getAllElements(), (element, index) => {
-        const selectThisElement = element;
-        element.setAttribute("nav-selected", element === selectElement);
-        element.setAttribute("nav-index", index);
-        if (selectThisElement) {
-          selectThisElement.scrollIntoView(true);
-          // if (element.nodeName === "INPUT") {
-          // element.focus();
-          // } else {
-          //   element.blur();
-          // }
-        }
-      });
-      selectElement.focus();
-      current.catagoryData = catagoryData;
-      setCurrent(current);
-    } else {
-      setNavigation(0);
     }
   };
 
