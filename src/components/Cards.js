@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 
-export default function SimpleCard({ categoryData, currentIndex }) {
+export default function SimpleCard({ categoryData, currentCardIndex }) {
   useEffect(() => {
-    if (currentIndex === -1) {
+    // console.log(currentCardIndex);
+    if (currentCardIndex === -1) {
       document.getElementById(`card-0`) &&
         document.getElementById(`card-0`).blur();
     } else {
-      document.getElementById(`card-${currentIndex}`) &&
-        document.getElementById(`card-${currentIndex}`).focus();
+      document.getElementById(`card-${currentCardIndex}`) &&
+        document.getElementById(`card-${currentCardIndex}`).focus();
     }
-  }, [currentIndex]);
+  }, [currentCardIndex]);
 
   return (
     <div className="parent">
@@ -25,7 +26,7 @@ export default function SimpleCard({ categoryData, currentIndex }) {
             <img
               className="card-img-top"
               src={v.image.p_small.url}
-              alt="Card image cap"
+              alt="Card cap"
             />
           </div>
           <div className="card-body">
