@@ -12,7 +12,6 @@ function App() {
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
 
   const [current, setNavigation] = useNavigation({
-    onSuccess: (data) => setCardData(data),
     onUpKey: () => setCurrentCardIndex((i) => (i > -1 ? i - 1 : i)),
     onDownKey: (len) => setCurrentCardIndex((i) => (len > i ? i + 1 : i)),
     onLeftKey: (len) => setCurrentNavIndex((i) => (i === 0 ? len - 1 : i - 1)),
@@ -20,25 +19,15 @@ function App() {
       setCurrentNavIndex((i) => (i + 1 > len - 1 ? 0 : i + 1)),
   });
 
-  function onUpKeyEvent() {
-    setCurrentCardIndex((i) => (i > -1 ? i - 1 : i));
-  }
-  function onDownKeyEvent() {
-    setCurrentCardIndex((i) => (cardData.len > i ? i + 1 : i));
-  }
-  function onLeftKeyEvent() {
-    setCurrentNavIndex((i) => (i === 0 ? category.len - 1 : i - 1));
-  }
-  function onDownKeyEvent() {
-    setCurrentNavIndex((i) => (i + 1 > category.len - 1 ? 0 : i + 1));
-  }
-
   useEffect(() => {
     async function fetchData() {
-      const catagories = await fetchAllCategories();
-      setCategory(catagories);
-      const firstCategoryData = await fetchCategoryData(catagories[0].link);
+      const categories = await fetchAllCategories();
+      setCategory(categories);
+      const firstCategoryData = await fetchCategoryData(categories[0].link);
       setCardData(firstCategoryData);
+      current.allCategoriesLength = categories.length;
+      current.cardLength = firstCategoryData.length;
+      setNavigation(current);
     }
     fetchData();
   }, []);
@@ -52,9 +41,12 @@ function App() {
 
   useEffect(() => {
     async function fetchData() {
-      const cat = category[currentNavIndex].link;
-      const categoryData = await fetchCategoryData(cat);
+      const categoryData = await fetchCategoryData(
+        category[currentNavIndex].link
+      );
       setCardData(categoryData);
+      current.cardLength = categoryData.length;
+      setNavigation(current);
     }
     current.navigationType === "nav" &&
       category[currentNavIndex] &&

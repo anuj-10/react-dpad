@@ -15,6 +15,8 @@ export const useNavigation = ({
 
   const [current, setCurrent] = useState({
     navigationType: "nav",
+    allCategoriesLength: 0,
+    cardLength: 0,
   });
 
   const setNavigation = () => current;
@@ -31,22 +33,18 @@ export const useNavigation = ({
     switch (key) {
       case "ArrowRight":
         if (current.navigationType === "nav") {
-          onRightKey();
+          onRightKey(current.allCategoriesLength);
         }
         break;
       case "ArrowLeft":
         if (current.navigationType === "nav") {
-          onLeftKey();
+          onLeftKey(current.allCategoriesLength);
         }
         break;
       case "ArrowDown":
         current.navigationType = "card";
         setCurrent(current);
-        onDownKey(
-          current.catagoryData
-            ? current.catagoryData.length
-            : Number.MAX_SAFE_INTEGER
-        );
+        onDownKey(current.cardLength);
         break;
       case "ArrowUp":
         onUpKey();

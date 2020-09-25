@@ -2,11 +2,6 @@ import React, { useEffect } from "react";
 
 export default function SimpleBottomNavigation({ category, currentNavIndex }) {
   useEffect(() => {
-    console.log("NAV", currentNavIndex);
-    console.log(
-      " dsda",
-      document.getElementById(`nav-header-${currentNavIndex}`)
-    );
     const elem = document.getElementById(`nav-header-${currentNavIndex}`);
     if (elem) {
       elem.focus();
