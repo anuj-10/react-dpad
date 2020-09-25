@@ -1,13 +1,18 @@
 import React, { useEffect } from "react";
 
-export default function SimpleBottomNavigation({ category, currentNavIndex }) {
+export default function SimpleBottomNavigation({
+  category,
+  currentNavIndex,
+  isNavActive,
+}) {
+  const elem = document.getElementById(`nav-header-${currentNavIndex}`);
   useEffect(() => {
-    const elem = document.getElementById(`nav-header-${currentNavIndex}`);
-    if (elem) {
+    // const elem = document.getElementById(`nav-header-${currentNavIndex}`);
+    if (isNavActive && elem) {
       elem.focus();
       elem.scrollIntoView(true);
     }
-  }, [currentNavIndex]);
+  }, [currentNavIndex, elem, isNavActive]);
 
   return (
     <div className="nav-header">

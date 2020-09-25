@@ -10,10 +10,14 @@ function App() {
   const [cardData, setCardData] = useState([]);
   const [currentNavIndex, setCurrentNavIndex] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
+  const [isNavActive, setIsNavActive] = useState(true);
 
   const [current, setNavigation] = useNavigation({
     onUpKey: () => setCurrentCardIndex((i) => (i > -1 ? i - 1 : i)),
-    onDownKey: (len) => setCurrentCardIndex((i) => (len > i ? i + 1 : i)),
+    onDownKey: (len) => {
+      setCurrentCardIndex((i) => (len > i ? i + 1 : i));
+      setIsNavActive(false);
+    },
     onLeftKey: (len) => setCurrentNavIndex((i) => (i === 0 ? len - 1 : i - 1)),
     onRightKey: (len) =>
       setCurrentNavIndex((i) => (i + 1 > len - 1 ? 0 : i + 1)),
@@ -34,6 +38,7 @@ function App() {
 
   useEffect(() => {
     if (currentCardIndex === -1) {
+      setIsNavActive(true);
       current.navigationType = "nav";
       setNavigation(current);
     }
@@ -58,7 +63,11 @@ function App() {
       <div className="search-bar">
         <input type="text" placeholder="Search TV" />
       </div>
-      <Navigation category={category} currentNavIndex={currentNavIndex} />
+      <Navigation
+        category={category}
+        currentNavIndex={currentNavIndex}
+        isNavActive={isNavActive}
+      />
       <Cards categoryData={cardData} currentCardIndex={currentCardIndex} />
     </div>
   );
