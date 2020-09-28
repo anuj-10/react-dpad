@@ -15,8 +15,8 @@ export const useNavigation = ({
 
   const [current, setCurrent] = useState({
     navigationType: "nav",
-    allCategoriesLength: 0,
-    cardLength: 0,
+    allCategoriesLength: 0, // For down navigation
+    cardLength: 0, // For right and left navigation
   });
 
   const setNavigation = () => current;

@@ -4,13 +4,16 @@ import "./App.css";
 import Cards from "./components/Cards";
 import Navigation from "./components/Navigation";
 import { useNavigation } from "./hooks/useNavigation";
+import Search from "./components/Search";
 
 function App() {
   const [category, setCategory] = useState([]);
   const [cardData, setCardData] = useState([]);
+  const [filteredCardData, setFilteredCardData] = useState([]);
   const [currentNavIndex, setCurrentNavIndex] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [isNavActive, setIsNavActive] = useState(true);
+  const [search, setSearch] = useState("");
 
   const [current, setNavigation] = useNavigation({
     onUpKey: () => setCurrentCardIndex((i) => (i > -1 ? i - 1 : i)),
@@ -29,6 +32,7 @@ function App() {
       setCategory(categories);
       const firstCategoryData = await fetchCategoryData(categories[0].link);
       setCardData(firstCategoryData);
+      setFilteredCardData(firstCategoryData);
       current.allCategoriesLength = categories.length;
       current.cardLength = firstCategoryData.length;
       setNavigation(current);
@@ -50,6 +54,7 @@ function App() {
         category[currentNavIndex].link
       );
       setCardData(categoryData);
+      setFilteredCardData(categoryData);
       current.cardLength = categoryData.length;
       setNavigation(current);
     }
@@ -58,17 +63,25 @@ function App() {
       fetchData();
   }, [currentNavIndex]);
 
+  const onSearch = (search) => {
+    const filteredArray = cardData.filter((i) => {
+      return i.title.toLowerCase().match(search);
+    });
+    setFilteredCardData(filteredArray);
+  };
+
   return (
     <div className="App">
-      <div className="search-bar">
-        <input type="text" placeholder="Search TV" />
-      </div>
+      <Search onSearch={onSearch} />
       <Navigation
         category={category}
         currentNavIndex={currentNavIndex}
         isNavActive={isNavActive}
       />
-      <Cards categoryData={cardData} currentCardIndex={currentCardIndex} />
+      <Cards
+        categoryData={filteredCardData}
+        currentCardIndex={currentCardIndex}
+      />
     </div>
   );
 }
