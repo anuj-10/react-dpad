@@ -5,6 +5,8 @@ export const useNavigation = ({
   onDownKey,
   onLeftKey,
   onRightKey,
+  onEnterKey,
+  onBackspaceKey,
 }) => {
   useEffect(() => {
     document.addEventListener("keydown", onKeyDown);
@@ -22,11 +24,14 @@ export const useNavigation = ({
   const setNavigation = () => current;
 
   const onKeyDown = async ({ key }) => {
+    console.log(key);
     if (
       key !== "ArrowRight" &&
       key !== "ArrowLeft" &&
       key !== "ArrowDown" &&
-      key !== "ArrowUp"
+      key !== "ArrowUp" &&
+      key !== "Enter" &&
+      key !== "Backspace"
     )
       return;
 
@@ -49,6 +54,13 @@ export const useNavigation = ({
       case "ArrowUp":
         onUpKey();
         break;
+      case "Enter":
+        onEnterKey();
+        break;
+      case "Backspace":
+        onBackspaceKey();
+        break;
+
       default:
         break;
     }

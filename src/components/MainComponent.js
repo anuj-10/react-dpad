@@ -4,6 +4,7 @@ import Cards from "./Cards";
 import Navigation from "./Navigation";
 import { useNavigation } from "../hooks/useNavigation";
 import Search from "./Search";
+import ModalComponent from "./Modal";
 
 function MainComponent() {
   const [category, setCategory] = useState([]);
@@ -12,6 +13,7 @@ function MainComponent() {
   const [currentNavIndex, setCurrentNavIndex] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(-1);
   const [isNavActive, setIsNavActive] = useState(true);
+  const [show, setShow] = useState(false);
 
   const [current, setNavigation] = useNavigation({
     onUpKey: () => setCurrentCardIndex((i) => (i > -1 ? i - 1 : i)),
@@ -22,6 +24,8 @@ function MainComponent() {
     onLeftKey: (len) => setCurrentNavIndex((i) => (i === 0 ? len - 1 : i - 1)),
     onRightKey: (len) =>
       setCurrentNavIndex((i) => (i + 1 > len - 1 ? 0 : i + 1)),
+    onEnterKey: () => setShow(true),
+    onBackspaceKey: () => setShow(false),
   });
 
   useEffect(() => {
@@ -69,7 +73,7 @@ function MainComponent() {
     setFilteredCardData(filteredArray);
   };
   return (
-    <>
+    <div>
       <Search onSearch={onSearch} />
       <Navigation
         category={category}
@@ -80,7 +84,8 @@ function MainComponent() {
         categoryData={filteredCardData}
         currentCardIndex={currentCardIndex}
       />
-    </>
+      <ModalComponent show={show} />
+    </div>
   );
 }
 
